@@ -83,7 +83,9 @@ it('marca e desmarca ultimo checkbox',function(){
   .should('not.be.checked')
 })
 it('campo telefonico continua vazio quando preenchido com valor não-numerico',function(){
-  cy.get('#phone-checkbox').check()
+  cy.get('#phone')
+  .type('12123213234324')
+  .should('have.value','')
   
 })
 
@@ -118,5 +120,34 @@ it('lidando com links que abrem em outra pagina',function(){
    cy.contains('Talking About Testing').should('be.visible')
   
 })
+it.only('exibe e esconde as mensagens de sucesso e erro usando o .invoke', () => {
+  cy.get('.success')
+    .should('not.be.visible')
+    .invoke('show')
+    .should('be.visible')
+    .and('contain', 'Mensagem enviada com sucesso.')
+    .invoke('hide')
+    .should('not.be.visible')
+  cy.get('.error')
+    .should('not.be.visible')
+    .invoke('show')
+    .should('be.visible')
+    .and('contain', 'Valide os campos obrigatórios!')
+    .invoke('hide')
+    .should('not.be.visible')
+})
+
+it.only('faça um requesição HTTP', function(){
+  cy.request('https://cac-tat.s3.eu-central-1.amazonaws.com/index.html')
+  .should(function(response){
+   const{status, statusText, body} = response
+   expect(status).to.equal(200)
+   expect(statusText).to.equal('OK')
+   expect(body).to.include('CAC TAT')
+  
+  })
+  
+})
+
 })
 
